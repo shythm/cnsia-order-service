@@ -5,29 +5,32 @@ import com.polarbookshop.orderservice.book.BookClient
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 
-private fun buildRejectedOrder(bookIsbn: String, quantity: Int): Order {
-    return Order(
-        bookIsbn = bookIsbn,
-        quantity = quantity,
-        status = OrderStatus.REJECTED
-    )
-}
-
-private fun buildAcceptedOrder(book: Book, quantity: Int): Order {
-    return Order(
-        bookIsbn = book.isbn,
-        bookName = "${book.title} - ${book.author}",
-        bookPrice = book.price,
-        quantity = quantity,
-        status = OrderStatus.ACCEPTED,
-    )
-}
-
 @Service
 class OrderService(
     val bookClient: BookClient,
     val orderRepository: OrderRepository,
 ) {
+
+    companion object {
+        fun buildRejectedOrder(bookIsbn: String, quantity: Int): Order {
+            return Order(
+                bookIsbn = bookIsbn,
+                quantity = quantity,
+                status = OrderStatus.REJECTED
+            )
+        }
+
+        fun buildAcceptedOrder(book: Book, quantity: Int): Order {
+            return Order(
+                bookIsbn = book.isbn,
+                bookName = "${book.title} - ${book.author}",
+                bookPrice = book.price,
+                quantity = quantity,
+                status = OrderStatus.ACCEPTED,
+            )
+        }
+    }
+
     fun getAllOrders(): Flow<Order> {
         return orderRepository.findAll()
     }
